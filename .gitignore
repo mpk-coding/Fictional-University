@@ -1,0 +1,7 @@
+#docker files
+node_modules
+db
+
+#wordpress files
+wordpress/wp-admin
+wordpress/wp-includes
