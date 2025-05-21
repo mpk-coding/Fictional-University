@@ -1,7 +1,9 @@
-#docker files
-node_modules
-db
+# Docker-related files
+node_modules/
+db/
 
-#wordpress files
-wordpress/wp-admin
-wordpress/wp-includes
+# Ignore WordPress core files
+wordpress/*
+
+# Exclude specific plugins and themes from being ignored
+!wordpress/wp-content/
