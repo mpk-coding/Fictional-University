@@ -19,7 +19,7 @@ function university_features()
     'header' => __('Header Menu', 'fictional-theme'),
     'footer' => __('Footer Menu', 'fictional-theme'),
     'footer-secondary' => __('Footer Menu Secondary', 'fictional-theme'),
-    'footer-tertiary' => __('Footer Menu Secondary', 'fictional-theme')
+    'footer-tertiary' => __('Footer Menu Tertiary', 'fictional-theme')
   ));
   // add support for title tag in browser tab
   add_theme_support("title-tag");

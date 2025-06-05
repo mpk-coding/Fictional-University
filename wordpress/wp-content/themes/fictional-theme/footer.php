@@ -41,7 +41,7 @@
 
       <div class="site-footer__col-four">
         <h3 class="headline headline--small">Connect With Us</h3>
-        <nav>
+        <nav class="nav-list">
           <!-- <ul class="min-list social-icons-list group">
             <li>
               <a href="#" class="social-color-facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
@@ -60,7 +60,8 @@
             </li>
           </ul> -->
           <?php wp_nav_menu(array(
-            'theme_location' => 'footer-tertiary'
+            'theme_location' => 'footer-tertiary',
+            'menu_class' => 'min-list social-icons-list group'
           )); ?>
         </nav>
       </div>
