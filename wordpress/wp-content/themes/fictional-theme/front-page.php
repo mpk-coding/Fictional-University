@@ -50,7 +50,7 @@
             while ($homepagePosts->have_posts()) {
                 $homepagePosts->the_post(); ?>
                 <div class="event-summary">
-                    <a class="event-summary__date event-summary__date--beige t-center" href="#">
+                    <a class="event-summary__date event-summary__date--beige t-center" href="<?php the_permalink(); ?>">
                         <span class="event-summary__month"><?php the_time('M'); ?></span>
                         <span class="event-summary__day"><?php the_time('d'); ?></span>
                     </a>
@@ -62,6 +62,7 @@
                     </div>
                 </div>
             <?php }
+            wp_reset_postdata();
             ?>
 
             <p class="t-center no-margin"><a href="#" class="btn btn--yellow">View All Blog Posts</a></p>
