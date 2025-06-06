@@ -1,6 +1,7 @@
 # Docker-related files
 node_modules/
 db/
+.env
 
 # Ignore WordPress core files
 wordpress/*
