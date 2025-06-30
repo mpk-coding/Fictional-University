@@ -6,6 +6,8 @@ function post_types()
     // wp fn
     // post type name, array of props
     register_post_type('event', array(
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor', 'excerpt'),
         'rewrite' => array(
             'slug' => 'events'
         ),
