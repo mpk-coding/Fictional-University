@@ -5,6 +5,8 @@ db/
 
 # Ignore WordPress core files
 wordpress/*
+wordpress/wp-content/plugins
 
 # Exclude specific plugins and themes from being ignored
 !wordpress/wp-content/
+!wordpress/wp-content/plugins/mu-plugins
