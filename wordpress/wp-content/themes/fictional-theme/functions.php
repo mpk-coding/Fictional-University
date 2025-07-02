@@ -29,7 +29,7 @@ function adjust_queries($query)
 {
   if (!is_admin() and is_post_type_archive('event') and $query->is_main_query()) {
     $today = date('Ymd');
-    $query->set('posts_per_page', '10');
+    $query->set('posts_per_page', 10);
     $query->set('meta_key', 'event_date');
     $query->set('orderby', 'meta_value_num');
     $query->set('order', 'asc');
