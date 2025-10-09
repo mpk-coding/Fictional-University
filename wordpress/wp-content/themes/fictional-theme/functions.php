@@ -27,6 +27,12 @@ function university_features()
 
 function adjust_queries($query)
 {
+  if (!is_admin() and is_post_type_archive('program') and $query->is_main_query()) {
+    $query->set('posts_per_page', -1);
+    $query->set('orderby', 'title');
+    $query->set('order', 'asc');
+  }
+
   if (!is_admin() and is_post_type_archive('event') and $query->is_main_query()) {
     $today = date('Ymd');
     $query->set('posts_per_page', 10);

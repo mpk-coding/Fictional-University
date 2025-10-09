@@ -3,7 +3,6 @@
 get_header(); ?>
 
 <div class="page-banner">
-    test
     <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg'); ?>)"></div>
     <div class="page-banner__content container container--narrow">
         <h1 class="page-banner__title">
@@ -23,7 +22,7 @@ get_header(); ?>
         the_post(); ?>
 
         <div class="event-summary">
-            <a class="event-summary__date t-center" href="#">
+            <a class="event-summary__date t-center" href="<?php the_permalink(); ?>">
                 <span class="event-summary__month">
                     <?php
                     $eventDate = new DateTime(get_field('event_date'));

@@ -37,7 +37,7 @@
                 $homepageEvents->the_post(); ?>
 
                 <div class="event-summary">
-                    <a class="event-summary__date t-center" href="#">
+                    <a class="event-summary__date t-center" href="<?php the_permalink(); ?>">
                         <span class="event-summary__month">
                             <?php
                             $eventDate = new DateTime(get_field('event_date'));
