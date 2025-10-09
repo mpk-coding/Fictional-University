@@ -18,3 +18,15 @@
 		justify-content: center;
 	}
 }
+
+.professor-card__image {
+	width: 100%;
+}
+
+.professor__thumbnail {
+	width: 150px;
+	height: 150px;
+	display: block;
+	object-fit: cover;
+	margin-bottom: 20px;
+}

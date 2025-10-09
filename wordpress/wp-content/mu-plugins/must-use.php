@@ -6,7 +6,6 @@ function post_types()
     // wp fn
     // post type name, array of props
     register_post_type('event', array(
-        'show_in_rest' => true,
         'supports' => array('title', 'editor', 'excerpt'),
         'rewrite' => array(
             'slug' => 'events'
@@ -25,7 +24,6 @@ function post_types()
 
     //
     register_post_type('program', array(
-        'show_in_rest' => true,
         'supports' => array('title', 'editor'),
         'rewrite' => array(
             'slug' => 'programs'
@@ -39,6 +37,24 @@ function post_types()
             'add_new_item' => 'Add New Program',
             'all_items' => 'All programs',
             'singular_name' => 'Program',
+        )
+    ));
+
+    //
+    register_post_type('professor', array(
+        'supports' => array('title', 'editor', 'thumbnail'),
+        // 'rewrite' => array(
+        //     'slug' => 'professors'
+        // ),  no need to rewrite the archive slug
+        'has_archive' => false, // false is the default, can be omitted
+        'public' => true,
+        'menu_icon' => 'dashicons-admin-users',
+        'show_in_rest' => true, //  enable block editor
+        'labels' => array(
+            'name' => "Professor",
+            'add_new_item' => 'Add New Professor',
+            'all_items' => 'All professors',
+            'singular_name' => 'Professor',
         )
     ));
 }
