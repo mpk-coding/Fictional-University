@@ -25,6 +25,9 @@ function university_features()
   add_theme_support("title-tag");
   // add post thumbnail support
   add_theme_support('post-thumbnails');
+
+  // custom image sizes
+  add_image_size('pageBanner', 1500, 350, true);
 }
 
 function adjust_queries($query)

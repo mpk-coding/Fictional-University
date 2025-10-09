@@ -6,7 +6,18 @@ while (have_posts()) {
     the_post(); ?>
 
     <div class="page-banner">
-        <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg'); ?>)"></div>
+        <?php
+        if (get_field('page_banner')['sizes']['pageBanner']) { ?>
+            <div class="page-banner__bg-image" style="background-image: url(
+        <?php echo get_field('page_banner')['sizes']['pageBanner'] ?>
+        )">
+            </div>
+        <?php } else {
+        ?>
+            <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg'); ?>)"></div>
+        <?php
+        } ?>
+
         <div class="page-banner__content container container--narrow">
             <div class="page-banner__thumb">
                 <?php
@@ -14,25 +25,26 @@ while (have_posts()) {
                 if (has_post_thumbnail()) { ?>
                     <img src="<?php echo $thumbnail__url ?>" alt="professor-thumbnail" class="professor__thumbnail">
                 <?php } else { ?>
-                    <img src="http://localhost:8080/wp-content/uploads/2025/10/default-avatar-photo-placeholder-profile-picture-vector.jpg" alt="professor-thumbnail" class="professor__thumbnail">
+                    <img src="<?php echo get_theme_file_uri('/images/placeholder-portrait.jpg') ?>" alt="professor-thumbnail" class="professor__thumbnail">
                 <?php }
                 ?>
             </div>
             <h1 class="page-banner__title"><?php echo the_title(); ?></h1>
             <div class="page-banner__intro">
-                <?php
-                $related_programs = get_field('related_programs');
-                if ($related_programs) {
-                    foreach ($related_programs as $program) {
-                        // create an array of related programs
-                        $program_titles[] = $program->post_title;
-                    }
-                    // add commas in-between titles
-                    $subjectsTaught = implode(', ', $program_titles);
-                ?>
+                <p><?php the_field('page_subtitle') ?></p>
+                <!-- <?php
+                        $related_programs = get_field('related_programs');
+                        if ($related_programs) {
+                            foreach ($related_programs as $program) {
+                                // create an array of related programs
+                                $program_titles[] = $program->post_title;
+                            }
+                            // add commas in-between titles
+                            $subjectsTaught = implode(', ', $program_titles);
+                        ?>
                     <p><?php echo $subjectsTaught . ' professor.' ?></p>
                 <?php }
-                ?>
+                ?> -->
             </div>
         </div>
     </div>
