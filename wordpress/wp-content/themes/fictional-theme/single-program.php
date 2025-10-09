@@ -29,6 +29,39 @@ while (have_posts()) {
         </div>
 
         <?php
+        $relatedProfessors = new WP_Query(array(
+            'posts_per_page' => -1,
+            'post_type' => 'professor',
+            'orderby' => 'title',
+            'order' => 'ASC',
+            'meta_query' => array(
+                array(
+                    'key' => 'related_programs',
+                    'compare' => 'LIKE',
+                    'value' => '"' . get_the_ID() . '"'
+                )
+            ),
+        ));
+        if ($relatedProfessors->have_posts()) { ?>
+
+            <hr class="section-break">
+            <h2 class="headline headline--small-plus t-center"><?php the_title(); ?> professors</h2>
+            <?php
+            $today = date('Ymd');
+            while ($relatedProfessors->have_posts()) {
+                $relatedProfessors->the_post(); ?>
+                <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
+            <?php }
+        } else { ?>
+            <hr class="section-break">
+            <h2 class="headline headline--small-plus t-center">No teachers for that course</h2>
+        <?php
+        }
+        //  reset variables after each custom query
+        wp_reset_postdata();
+        ?>
+
+        <?php
         $relatedEvents = new WP_Query(array(
             'posts_per_page' => -1,
             'post_type' => 'event',
@@ -49,6 +82,7 @@ while (have_posts()) {
                 )
             ),
         ));
+
         if ($relatedEvents->have_posts()) { ?>
 
             <hr class="section-break">

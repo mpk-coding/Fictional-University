@@ -41,6 +41,25 @@ function post_types()
             'singular_name' => 'Program',
         )
     ));
+
+    //
+    register_post_type('professor', array(
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor', 'thumbnail'),
+        // 'rewrite' => array(
+        //     'slug' => 'professors'
+        // ),  no need to rewrite the archive slug
+        'has_archive' => false, // false is the default, can be omitted
+        'public' => true,
+        'menu_icon' => 'dashicons-admin-users',
+        'show_in_rest' => true, //  enable block editor
+        'labels' => array(
+            'name' => "Professor",
+            'add_new_item' => 'Add New Professor',
+            'all_items' => 'All professors',
+            'singular_name' => 'Professor',
+        )
+    ));
 }
 
 add_action('init', 'post_types');
