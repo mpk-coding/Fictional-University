@@ -24,7 +24,7 @@ function university_features()
   // add support for title tag in browser tab
   add_theme_support("title-tag");
   // add post thumbnail support
-  // add_theme_support('post-thumbnails');
+  add_theme_support('post-thumbnails');
 }
 
 function adjust_queries($query)

@@ -6,7 +6,6 @@ function post_types()
     // wp fn
     // post type name, array of props
     register_post_type('event', array(
-        'show_in_rest' => true,
         'supports' => array('title', 'editor', 'excerpt'),
         'rewrite' => array(
             'slug' => 'events'
@@ -25,7 +24,6 @@ function post_types()
 
     //
     register_post_type('program', array(
-        'show_in_rest' => true,
         'supports' => array('title', 'editor'),
         'rewrite' => array(
             'slug' => 'programs'
@@ -44,7 +42,6 @@ function post_types()
 
     //
     register_post_type('professor', array(
-        'show_in_rest' => true,
         'supports' => array('title', 'editor', 'thumbnail'),
         // 'rewrite' => array(
         //     'slug' => 'professors'

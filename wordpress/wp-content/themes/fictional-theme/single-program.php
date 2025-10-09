@@ -46,13 +46,26 @@ while (have_posts()) {
 
             <hr class="section-break">
             <h2 class="headline headline--small-plus t-center"><?php the_title(); ?> professors</h2>
-            <?php
-            $today = date('Ymd');
-            while ($relatedProfessors->have_posts()) {
-                $relatedProfessors->the_post(); ?>
-                <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
-            <?php }
-        } else { ?>
+            <ul class='professor-cards'>
+                <?php
+                $today = date('Ymd');
+                while ($relatedProfessors->have_posts()) {
+                    $relatedProfessors->the_post();
+                    $thumbnail_url = get_the_post_thumbnail_url($post_id, 'thumbnail'); ?>
+                    <li class='professor-card__list-item'>
+                        <a class='professor-card' href="<?php the_permalink(); ?>">
+                            <?php if ($thumbnail_url) { ?>
+                                <img class='professor-card__image' src='<?php echo $thumbnail_url ?>' alt='professor-thumbnail'>
+                            <?php } else { ?>
+                                <img class='professor-card__image' src='http://localhost:8080/wp-content/uploads/2025/10/default-avatar-photo-placeholder-profile-picture-vector.jpg' alt='professor-thumbnail'>
+                            <?php }
+                            ?>
+                            <span class='professor-card__name'><?php the_title(); ?></span>
+                        </a>
+                    </li>
+                <?php } ?>
+            </ul>
+        <?php } else { ?>
             <hr class="section-break">
             <h2 class="headline headline--small-plus t-center">No teachers for that course</h2>
         <?php

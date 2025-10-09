@@ -8,9 +8,31 @@ while (have_posts()) {
     <div class="page-banner">
         <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg'); ?>)"></div>
         <div class="page-banner__content container container--narrow">
+            <div class="page-banner__thumb">
+                <?php
+                $thumbnail__url = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
+                if (has_post_thumbnail()) { ?>
+                    <img src="<?php echo $thumbnail__url ?>" alt="professor-thumbnail" class="professor__thumbnail">
+                <?php } else { ?>
+                    <img src="http://localhost:8080/wp-content/uploads/2025/10/default-avatar-photo-placeholder-profile-picture-vector.jpg" alt="professor-thumbnail" class="professor__thumbnail">
+                <?php }
+                ?>
+            </div>
             <h1 class="page-banner__title"><?php echo the_title(); ?></h1>
             <div class="page-banner__intro">
-                <p>Insert custom field here.</p>
+                <?php
+                $related_programs = get_field('related_programs');
+                if ($related_programs) {
+                    foreach ($related_programs as $program) {
+                        // create an array of related programs
+                        $program_titles[] = $program->post_title;
+                    }
+                    // add commas in-between titles
+                    $subjectsTaught = implode(', ', $program_titles);
+                ?>
+                    <p><?php echo $subjectsTaught . ' professor.' ?></p>
+                <?php }
+                ?>
             </div>
         </div>
     </div>
@@ -19,7 +41,7 @@ while (have_posts()) {
         <div class="metabox metabox--position-up metabox--with-home-link">
             <p>
                 <a class="metabox__blog-home-link" href="<?php echo get_post_type_archive_link('event'); ?>">
-                    <i class="fa fa-home" aria-hidden="true"></i> Professors home</a>
+                    <i class="fa fa-home" aria-hidden="true"></i> Professors</a>
                 <span class="metabox__main">Posted by <?php the_author_posts_link(); ?> on <?php the_time('j-n-Y'); ?> in <?php echo get_the_category_list(', '); ?></span>
             </p>
         </div>
