@@ -33,6 +33,7 @@ while (have_posts()) {
     ?>
 
     <?php
+    // see if post has children
     $hasChildren = get_pages(array(
       'child_of' => get_the_ID()
     ));
@@ -43,8 +44,10 @@ while (have_posts()) {
           <?php
           // for list of child pages
           if ($parent) {
+            // siblings
             $child_of = $parent;
           } else {
+            // children
             $child_of = get_the_ID();
           }
 
