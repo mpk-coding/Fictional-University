@@ -1,4 +1,45 @@
 <?php
+function pageBanner($args = [])
+{
+  if (!isset($args['title'])) {
+    $args['title'] = get_the_title();
+  }
+
+  if (!isset($args['subtitle'])) {
+    $args['subtitle'] = get_field('page_subtitle');
+  }
+
+  if (!isset($args['bg']) && get_field('page_banner')['sizes']['pageBanner']) {
+    $args['bg'] = get_field('page_banner')['sizes']['pageBanner'];
+  } else if (!isset($args['bg']) && !get_field('page_banner')['sizes']['pageBanner']) {
+    $args['bg'] = get_theme_file_uri('/images/ocean.jpg');
+  } ?>
+
+  <div class="page-banner">
+    <div class="page-banner__bg-image"
+      style="background-image: url(<?php echo $args['bg'] ?>)">
+    </div>
+
+    <div class="page-banner__content container container--narrow">
+      <div class="page-banner__thumb">
+        <?php
+        $thumbnail__url = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
+        if (has_post_thumbnail()) { ?>
+          <img src="<?php echo $thumbnail__url ?>" alt="professor-thumbnail" class="professor__thumbnail">
+        <?php } elseif ($thumbnail__url) { ?>
+          <img src="<?php echo get_theme_file_uri('/images/placeholder-portrait.jpg') ?>" alt="professor-thumbnail" class="professor__thumbnail">
+        <?php }
+        ?>
+      </div>
+      <h1 class="page-banner__title"><?php echo $args['title'] ?></h1>
+      <div class="page-banner__intro">
+        <p><?php echo $args['subtitle'] ?></p>
+      </div>
+    </div>
+  </div>
+
+<?php
+}
 
 function university_files()
 {
