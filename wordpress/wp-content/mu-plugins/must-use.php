@@ -57,6 +57,24 @@ function post_types()
             'singular_name' => 'Professor',
         )
     ));
+
+    //
+    register_post_type('campus', array(
+        'supports' => array('title', 'editor', 'excerpt'),
+        'rewrite' => array(
+            'slug' => 'campuses'
+        ),
+        'has_archive' => true,
+        'public' => true,
+        'menu_icon' => 'dashicons-location-alt',
+        'show_in_rest' => true, //  enable block editor
+        'labels' => array(
+            'name' => "Campus",
+            'add_new_item' => 'Add New Campus',
+            'all_items' => 'All campuses',
+            'singular_name' => 'Campus',
+        )
+    ));
 }
 
 add_action('init', 'post_types');

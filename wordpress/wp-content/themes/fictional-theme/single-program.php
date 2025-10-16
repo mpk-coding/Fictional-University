@@ -9,7 +9,7 @@ while (have_posts()) {
     <div class="container container--narrow page-section">
         <div class="metabox metabox--position-up metabox--with-home-link">
             <p>
-                <a class="metabox__blog-home-link" href="<?php echo get_post_type_archive_link('program'); ?>">
+                <a class="metabox__blog-home-link" href="<?php echo get_post_type_archive_link(get_post_type()); ?>">
                     <i class="fa fa-home" aria-hidden="true"></i> All Programs</a>
                 <span class="metabox__main">Posted by <?php the_author_posts_link(); ?> on <?php the_time('j-n-Y'); ?> in <?php echo get_the_category_list(', '); ?></span>
             </p>
@@ -101,7 +101,23 @@ while (have_posts()) {
             <hr class="section-break">
             <h2 class="headline headline--small-plus t-center">No upcoming events</h2>
         <?php
-        } ?>
+        }
+        wp_reset_postdata();
+
+        $relatedCampus = get_field('related_campus');
+
+        if ($relatedCampus) { ?>
+            <hr class="section-break">
+            <h2 class="headline headline--small-plus t-center">Available at</h2>
+            <ul class='link-list min-list'>
+                <?php
+                foreach ($relatedCampus as $campus) { ?>
+                    <li><a href="<?php echo get_the_permalink($campus); ?>"><?php echo get_the_title($campus); ?></a></li>
+                <?php } ?>
+            </ul>
+        <?php
+        }
+        ?>
 
     </div>
 
