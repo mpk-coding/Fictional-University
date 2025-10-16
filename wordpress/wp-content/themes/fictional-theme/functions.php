@@ -93,6 +93,10 @@ function adjust_queries($query)
       'type' => 'numeric'
     ));
   }
+
+  if (!is_admin() and is_post_type_archive('campus') and $query->is_main_query()) {
+    $query->set('posts_per_page', -1);
+  }
 }
 
 add_action('after_setup_theme', 'university_features');

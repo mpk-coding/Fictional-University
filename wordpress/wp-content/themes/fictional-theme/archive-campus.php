@@ -19,6 +19,12 @@ pageBanner(array(
                 class='marker'
                 data-lat='<?php echo $mapLocation['lat'] ?>'
                 data-lng='<?php echo $mapLocation['lng'] ?>'>
+                <div>
+                    <a href='<?php the_permalink(); ?>'>
+                        <h3><?php echo the_title(); ?></h3>
+                    </a>
+                    <p><?php echo $mapLocation['address'] ?></p>
+                </div>
             </div>
 
         <?php

@@ -9,8 +9,8 @@ while (have_posts()) {
     <div class="container container--narrow page-section">
         <div class="metabox metabox--position-up metabox--with-home-link">
             <p>
-                <a class="metabox__blog-home-link" href="<?php echo get_post_type_archive_link('event'); ?>">
-                    <i class="fa fa-home" aria-hidden="true"></i> Events Home</a>
+                <a class="metabox__blog-home-link" href="<?php echo get_post_type_archive_link(get_post_type()); ?>">
+                    <i class="fa fa-home" aria-hidden="true"></i> All Campuses</a>
                 <span class="metabox__main"><?php the_title() ?></span>
             </p>
         </div>
@@ -20,29 +20,72 @@ while (have_posts()) {
         </div>
 
         <?php
-        $related_programs = get_field('related_programs');
-        if ($related_programs) { ?>
+
+        $relatedPrograms = new WP_Query(array(
+            'posts_per_page' => -1,
+            'post_type' => 'program',
+            'order' => 'asc',
+            'orderby' => 'title',
+            'meta_query' => array(
+                array(
+                    'key' => 'related_campus',
+                    'value' => '"' . get_the_id() . '"',
+                    'compare' => 'like'
+                )
+
+            )
+        ));
+
+        if ($relatedPrograms->have_posts()) { ?>
 
             <hr class="section-break">
-            <h2 class="headline headline--medium">Related Programs(s)</h2>
-            <ul class="link-list min-list">
-
+            <h2 class="headline headline--small-plus t-center"><?php the_title(); ?> programs</h2>
+            <ul class='min-list link-list'>
                 <?php
-                foreach ($related_programs as $program) { ?>
-                    <li>
-                        <a href="<?php the_permalink($program) ?>"><?php echo $program->post_title ?></a>
-                    </li>
+                $today = date('Ymd');
+                while ($relatedPrograms->have_posts()) {
+                    $relatedPrograms->the_post();
+                ?>
+                    <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
                 <?php } ?>
-
             </ul>
+        <?php } else { ?>
+            <hr class="section-break">
+            <h2 class="headline headline--small-plus t-center">No programs for this campus</h2>
+        <?php
+        }
+        //  reset variables after each custom query
+        wp_reset_postdata();
+        ?>
 
-        <?php } ?>
 
+        <hr class="section-break">
+        <h2 class="headline headline--small-plus t-center">Location</h2>
+        <div class='acf-map'>
+            <?php
+            $mapLocation = get_field('map_location');
+            ?>
+            <div
+                class='marker'
+                data-lat='<?php echo $mapLocation['lat'] ?>'
+                data-lng='<?php echo $mapLocation['lng'] ?>'>
+                <h3><?php echo the_title(); ?></h3>
+
+                <p><?php echo $mapLocation['address'] ?></p>
+
+            </div>
+
+        <?php
+    }
+    //  add pagination
+    echo paginate_links();
+        ?>
+        </div>
 
     </div>
 
-<?php }
+    <?php
 
-get_footer();
+    get_footer();
 
-?>
+    ?>
