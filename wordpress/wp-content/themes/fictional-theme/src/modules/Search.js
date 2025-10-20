@@ -3,6 +3,7 @@ class Search {
 	constructor() {
 		this.overlay = document.querySelector(".search-overlay");
 		this.input = document.querySelector("#search-term");
+		this.results = document.querySelector("#search-overlay__results");
 		this.openButtons = document.querySelectorAll(".js-search-trigger");
 		this.closeButton = document.querySelector(
 			".fa.fa-window-close.search-overlay__close"
@@ -11,6 +12,8 @@ class Search {
 		this.isOverlayOpen = this.overlay.classList.contains(
 			"search-overlay--active"
 		);
+		this.isSpinner = false;
+		this.inputValue;
 
 		this.events();
 	}
@@ -30,12 +33,12 @@ class Search {
 		});
 
 		// keyboard support
-		document.addEventListener("keyup", (event) =>
-			this.keypressDispatcher(event)
-		);
+		document.addEventListener("keyup", (event) => {
+			this.keypressDispatcher(event);
+		});
 
-		this.input.addEventListener("input", (event) => {
-			this.typingLogic(event, 2000);
+		this.input.addEventListener("keyup", () => {
+			this.typingLogic(this.getResults.bind(this), 2000);
 		});
 	}
 
@@ -63,22 +66,47 @@ class Search {
 		// clear the input value
 		if (this.input) {
 			this.input.value = ""; // clear the field
+			this.getResults();
 		}
 	}
 
-	typingLogic(event, timeout = 200) {
-		// clear any previous timer
-		clearTimeout(this.typingTimer);
+	typingLogic(fn, timeout = 200) {
+		// prevent firing logic on cursor movements with arrow keys and so on
+		// if new value differs from the old
+		if (this.input.value != this.inputValue) {
+			// clear any previous timer
+			clearTimeout(this.typingTimer);
+			// change old value
+			this.inputValue = this.input.value;
 
-		// start a new timer
-		this.typingTimer = setTimeout(() => {
-			console.log(this.input.value);
-		}, timeout);
+			// if there is value
+			if (this.input.value) {
+				// are we loading
+				if (!this.isSpinner) {
+					this.results.innerHTML = "<div class='spinner-loader'></div>";
+					this.isSpinner = true;
+				}
+				// start a new timer
+				this.typingTimer = setTimeout(() => {
+					fn();
+					this.isSpinner = false;
+				}, timeout);
+			} else {
+				// clear the results
+				this.results.innerHTML = "";
+			}
+		}
 	}
 
 	keypressDispatcher(event) {
 		// open on 's' press
-		if (!this.isOverlayOpen) {
+		const activeEl = document.activeElement;
+		const isTyping =
+			activeEl.tagName === "INPUT" ||
+			activeEl.tagName === "TEXTAREA" ||
+			activeEl.isContentEditable;
+
+		if (!this.isOverlayOpen && !isTyping) {
 			if (event.keyCode === 83) {
 				this.openOverlay();
 				this.input.focus();
@@ -89,6 +117,10 @@ class Search {
 				this.closeOverlay();
 			}
 		}
+	}
+
+	getResults() {
+		this.results.innerHTML = this.input.value;
 	}
 }
 
