@@ -1,22 +1,28 @@
 {
-  "name": "fictional-university-theme",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "wp-scripts build",
-    "start": "wp-scripts start",
-    "dev": "wp-scripts start",
-    "devFast": "wp-scripts start",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@glidejs/glide": "^3.4.1",
-    "@wordpress/scripts": "*",
-    "axios": "^0.21.1",
-    "normalize.css": "^8.0.1"
-  }
+	"name": "fictional-university-theme",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"dev": "wp-scripts start",
+		"devFast": "wp-scripts start",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@glidejs/glide": "^3.4.1",
+		"@wordpress/scripts": "*",
+		"axios": "^0.21.1",
+		"normalize.css": "^8.0.1"
+	},
+	"devDependencies": {
+		"sass": "^1.93.2",
+		"sass-loader": "^13.3.2",
+		"style-loader": "^3.3.3",
+		"css-loader": "^6.8.1"
+	}
 }
