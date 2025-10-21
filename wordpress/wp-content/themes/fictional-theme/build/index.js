@@ -4036,7 +4036,7 @@ class Search {
     this.body = document.querySelector("body");
     this.isOverlayOpen = this.overlay.classList.contains("search-overlay--active");
     this.isSpinner = false;
-    this.inputValue;
+    this.previousValue;
     this.events();
   }
 
@@ -4059,7 +4059,7 @@ class Search {
       this.keypressDispatcher(event);
     });
     this.input.addEventListener("keyup", () => {
-      this.typingLogic(this.getResults.bind(this), 2000);
+      this.typingLogic(this.getResults.bind(this), 1000);
     });
   }
 
@@ -4090,11 +4090,11 @@ class Search {
   typingLogic(fn, timeout = 200) {
     // prevent firing logic on cursor movements with arrow keys and so on
     // if new value differs from the old
-    if (this.input.value != this.inputValue) {
+    if (this.input.value != this.previousValue) {
       // clear any previous timer
       clearTimeout(this.typingTimer);
       // change old value
-      this.inputValue = this.input.value;
+      this.previousValue = this.input.value;
 
       // if there is value
       if (this.input.value) {
@@ -4116,6 +4116,7 @@ class Search {
   }
   keypressDispatcher(event) {
     // open on 's' press
+    // prevent opening when other editable fields are focused
     const activeEl = document.activeElement;
     const isTyping = activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.isContentEditable;
     if (!this.isOverlayOpen && !isTyping) {
@@ -4130,8 +4131,35 @@ class Search {
       }
     }
   }
-  getResults() {
-    this.results.innerHTML = this.input.value;
+
+  // getResults() {
+  // 	this.results.innerHTML = this.input.value;
+  // 	console.log(this.input.value);
+  // }
+
+  async getResults() {
+    const url = `/wp-json/wp/v2/posts?search=${this.input.value}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const result = await response.json();
+
+      //
+      console.log(result);
+      let render = ``;
+      result.map(element => {
+        render += `
+				<div class='test'>
+					<a href='${element.link}'>${element.title.rendered}</a>
+				</div>`;
+      });
+      this.results.innerHTML = render;
+      this.isSpinner = false;
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Search);
