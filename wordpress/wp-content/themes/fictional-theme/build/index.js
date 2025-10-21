@@ -4082,9 +4082,9 @@ class Search {
     this.isOverlayOpen = false;
 
     // clear the input value
-    if (this.input) {
+    if (this.input.value || this.results.innerHTML.length) {
       this.input.value = ""; // clear the field
-      this.getResults();
+      this.results.innerHTML = "";
     }
   }
   typingLogic(fn, timeout = 200) {
@@ -4108,9 +4108,6 @@ class Search {
           fn();
           this.isSpinner = false;
         }, timeout);
-      } else {
-        // clear the results
-        this.results.innerHTML = "";
       }
     }
   }
@@ -4138,6 +4135,9 @@ class Search {
   // }
 
   async getResults() {
+    if (!this.input.value) {
+      return;
+    }
     const url = `/wp-json/wp/v2/posts?search=${this.input.value}`;
     try {
       const response = await fetch(url);
@@ -4145,16 +4145,15 @@ class Search {
         throw new Error(`Response status: ${response.status}`);
       }
       const result = await response.json();
-
       //
-      console.log(result);
-      let render = ``;
-      result.map(element => {
-        render += `
-				<div class='test'>
-					<a href='${element.link}'>${element.title.rendered}</a>
-				</div>`;
-      });
+      let render = `
+				<h2 class='search-overlay__section-title'>General Information</h2>
+				<ul class='link-list min-list'>
+				${result.map(element => {
+        return `
+					<li><a href='${element.link}'>${element.title.rendered}</a></li>`;
+      }).join("")}
+				</ul>`;
       this.results.innerHTML = render;
       this.isSpinner = false;
     } catch (error) {
