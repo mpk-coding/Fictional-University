@@ -4138,22 +4138,28 @@ class Search {
     if (!this.input.value) {
       return;
     }
-    const url = `/wp-json/wp/v2/posts?search=${this.input.value}`;
+    const url = universityData.root_url + `/wp-json/wp/v2/posts?search=${this.input.value}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-      const result = await response.json();
+      const posts = await response.json();
+      let render;
       //
-      let render = `
+      if (posts.length) {
+        render = `
 				<h2 class='search-overlay__section-title'>General Information</h2>
 				<ul class='link-list min-list'>
-				${result.map(element => {
-        return `
+				${posts.map(element => {
+          return `
 					<li><a href='${element.link}'>${element.title.rendered}</a></li>`;
-      }).join("")}
+        }).join("")}
 				</ul>`;
+      } else {
+        render = `
+				<h2 class='search-overlay__section-title'>No search results for that phrase</h2>`;
+      }
       this.results.innerHTML = render;
       this.isSpinner = false;
     } catch (error) {
