@@ -4028,6 +4028,7 @@ __webpack_require__.r(__webpack_exports__);
 class Search {
   // INIT
   constructor() {
+    this.addSearchHTML();
     this.overlay = document.querySelector(".search-overlay");
     this.input = document.querySelector("#search-term");
     this.results = document.querySelector("#search-overlay__results");
@@ -4059,7 +4060,7 @@ class Search {
       this.keypressDispatcher(event);
     });
     this.input.addEventListener("keyup", () => {
-      this.typingLogic(this.getResults.bind(this), 1000);
+      this.typingLogic(this.getResults.bind(this), 750);
     });
   }
 
@@ -4128,12 +4129,6 @@ class Search {
       }
     }
   }
-
-  // getResults() {
-  // 	this.results.innerHTML = this.input.value;
-  // 	console.log(this.input.value);
-  // }
-
   async getResults() {
     if (!this.input.value) {
       return;
@@ -4165,6 +4160,20 @@ class Search {
     } catch (error) {
       console.error(error.message);
     }
+  }
+  addSearchHTML() {
+    document.body.insertAdjacentHTML("beforeend", `<div class="search-overlay">
+				<div class="search-overlay__top">
+					<div class="container">
+					<i class="fa fa-search search-overlay__icon" aria-hidden='true'></i>
+					<input type="text" id='search-term' class="search-term" placeholder='What are you looking for?'>
+					<i id='searchClose' class="fa fa-window-close search-overlay__close" aria-hidden='true'></i>
+					</div>
+				</div>
+				<div class="container">
+					<div id="search-overlay__results"></div>
+				</div>
+				</div>`);
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Search);
