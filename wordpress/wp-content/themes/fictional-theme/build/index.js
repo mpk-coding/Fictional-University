@@ -4133,33 +4133,45 @@ class Search {
     if (!this.input.value) {
       return;
     }
-    const url = universityData.root_url + `/wp-json/wp/v2/posts?search=${this.input.value}`;
+    const postsURL = universityData.root_url + `/wp-json/wp/v2/posts?search=${this.input.value}`;
+    const pagesURL = universityData.root_url + `/wp-json/wp/v2/pages?search=${this.input.value}`;
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
+      // get all at the same time
+      const [postsResponse, pagesResponse] = await Promise.all([fetch(postsURL), fetch(pagesURL)]);
+
+      // no response
+      if (!postsResponse.ok || !pagesResponse.ok) {
+        throw new Error(`Response status: ${posts.status}`);
       }
-      const posts = await response.json();
-      let render;
-      //
-      if (posts.length) {
-        render = `
-				<h2 class='search-overlay__section-title'>General Information</h2>
-				<ul class='link-list min-list'>
-				${posts.map(element => {
-          return `
-					<li><a href='${element.link}'>${element.title.rendered}</a></li>`;
-        }).join("")}
-				</ul>`;
-      } else {
-        render = `
-				<h2 class='search-overlay__section-title'>No search results for that phrase</h2>`;
-      }
-      this.results.innerHTML = render;
-      this.isSpinner = false;
+
+      // json results
+      const [posts, pages] = await Promise.all([postsResponse.json(), pagesResponse.json()]);
+
+      // Combine results
+      const results = [...posts, ...pages];
+      this.renderSearch(results);
     } catch (error) {
       console.error(error.message);
     }
+  }
+  renderSearch(array) {
+    let render;
+    //
+    if (array.length) {
+      render = `
+				<h2 class='search-overlay__section-title'>General Information</h2>
+				<ul class='link-list min-list'>
+				${array.map(element => {
+        return `
+					<li><a href='${element.link}'>${element.title.rendered}</a></li>`;
+      }).join("")}
+				</ul>`;
+    } else {
+      render = `
+				<h2 class='search-overlay__section-title'>No search results for that phrase</h2>`;
+    }
+    this.results.innerHTML = render;
+    this.isSpinner = false;
   }
   addSearchHTML() {
     document.body.insertAdjacentHTML("beforeend", `<div class="search-overlay">
