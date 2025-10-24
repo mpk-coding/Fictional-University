@@ -10,12 +10,13 @@ function universityRegisterSearch()
 
 add_action('rest_api_init', "universityRegisterSearch");
 
-function universitySearchResults()
+function universitySearchResults($data)
 {
     // get data
     $professors = new WP_Query(array(
         'post_type' => 'professor',
         'posts_per_page' => -1,
+        's' => sanitize_text_field($data['term'])
     ));
 
 
