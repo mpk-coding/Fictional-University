@@ -45,6 +45,7 @@ function pageBanner($args = [])
 
 function universityCustomRest()
 {
+  // add a custom property to the returned object in rest
   register_rest_field('post', 'authorName', array(
     'get_callback' => function () {
       return get_the_author();
