@@ -1,4 +1,6 @@
 <?php
+require(get_theme_file_path('/includes/search-route.php'));
+
 function pageBanner($args = [])
 {
   if (!isset($args['title'])) {
@@ -41,7 +43,7 @@ function pageBanner($args = [])
 <?php
 }
 
-function university_custom_rest()
+function universityCustomRest()
 {
   register_rest_field('post', 'authorName', array(
     'get_callback' => function () {
@@ -56,7 +58,7 @@ function university_custom_rest()
   ));
 }
 
-add_action('rest_api_init', 'university_custom_rest');
+add_action('rest_api_init', 'universityCustomRest');
 
 function university_files()
 {
