@@ -1,4 +1,6 @@
 <?php
+require(get_theme_file_path('/includes/search-route.php'));
+
 function pageBanner($args = [])
 {
   if (!isset($args['title'])) {
@@ -40,6 +42,24 @@ function pageBanner($args = [])
 
 <?php
 }
+
+function universityCustomRest()
+{
+  // add a custom property to the returned object in rest
+  register_rest_field('post', 'authorName', array(
+    'get_callback' => function () {
+      return get_the_author();
+    }
+  ));
+
+  register_rest_field('page', 'authorName', array(
+    'get_callback' => function () {
+      return get_the_author();
+    }
+  ));
+}
+
+add_action('rest_api_init', 'universityCustomRest');
 
 function university_files()
 {

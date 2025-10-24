@@ -4248,7 +4248,7 @@ class Search {
 				<ul class='link-list min-list'>
 				${array.map(element => {
         return `
-					<li><a href='${element.link}'>${element.title.rendered}</a></li>`;
+					<li><a href='${element.link}'>${element.title.rendered}</a> ${element.type == "post" ? `by ${element.authorName}` : ""}</li>`;
       }).join("")}
 				</ul>`;
     } else {
