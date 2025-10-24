@@ -41,6 +41,23 @@ function pageBanner($args = [])
 <?php
 }
 
+function university_custom_rest()
+{
+  register_rest_field('post', 'authorName', array(
+    'get_callback' => function () {
+      return get_the_author();
+    }
+  ));
+
+  register_rest_field('page', 'authorName', array(
+    'get_callback' => function () {
+      return get_the_author();
+    }
+  ));
+}
+
+add_action('rest_api_init', 'university_custom_rest');
+
 function university_files()
 {
   wp_enqueue_script('google-maps', '//maps.googleapis.com/maps/api/js?key=' . GOOGLE_MAPS_API_KEY, NULL, '1.0', true);
