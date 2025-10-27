@@ -4230,6 +4230,14 @@ class Search {
       console.error(error.message);
     }
   }
+  trimWords(str, numWords, suffix = "...") {
+    if (!str) return "";
+    // strip HTML tags and comments
+    const clean = str.replace(/<!--[\s\S]*?-->/g, "").replace(/<[^>]*>/g, "");
+    const words = clean.split(/\s+/);
+    if (words.length <= numWords) return clean;
+    return words.slice(0, numWords).join(" ") + suffix;
+  }
   renderSearch(array) {
     let render;
     //
@@ -4256,10 +4264,15 @@ class Search {
       }).join("") : `<li>No programs found. <a href='${universityData.root_url}/programs'>See all programs</a></li>`}
 					</ul>
 					<h2 class='search-overlay__section-title'>Professors</h2>
-					<ul class='link-list min-list'>
+					<ul class='professor-cards'>
 					${array.professors.length ? array.professors.map(post => {
-        return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
-      }).join("") : "<li>No results</li>"}
+        return `<li class='professor-card__list-item'>
+													<a class='professor-card' href='${post.permalink}'>
+														<img class='professor-card__image' src='${post.thumbnail}'>
+														<span class='professor-card__name'>${post.title}</span>
+													</a>
+												</li>`;
+      }).join("") : "<li>No professors found.</li>"}
 					</ul>
 				</div>
 				<div class='one-third'>
@@ -4270,15 +4283,30 @@ class Search {
       }).join("") : `<li>No campuses match that search. <a href='${universityData.root_url}/campuses'>See all campuses</a></li>`}
 					</ul>
 					<h2 class='search-overlay__section-title'>Events</h2>
-										<ul class='link-list min-list'>
 					${array.events.length ? array.events.map(post => {
-        return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
+        console.log(`post content_short:${post.content_short}`);
+        console.log(`post excerpt:${post.excerpt}`);
+        return `
+										<div class="event-summary">
+											<a class="event-summary__date t-center" href="<?php the_permalink(); ?>">
+												<span class="event-summary__month">
+													${post.month}
+												</span>
+												<span class="event-summary__day">
+													${post.day}
+												</span>
+											</a>
+											<div class="event-summary__content">
+												<h5 class="event-summary__title headline headline--tiny"><a href="${post.permalink}">${post.title}</a></h5>
+												<p>${post.excerpt ? `${post.excerpt}` : `${post.contentShort}`}
+													<a href='${post.permalink}'>Learn More</a>
+													</p>
+											</div>
+										</div>`;
       }).join("") : "<li>No results</li>"}
-					</ul>
 				</div>`;
     } else {
-      render = `
-				<h2 class='search-overlay__section-title'>No search results for that phrase</h2>`;
+      render = "No results for that phrase.";
     }
     this.results.innerHTML = render;
     this.isSpinner = false;

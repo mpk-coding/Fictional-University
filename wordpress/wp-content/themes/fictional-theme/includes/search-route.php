@@ -58,7 +58,8 @@ function universitySearchResults($data)
             array_push($mainQueryResults['professors'], array(
                 'id' => get_the_ID(),
                 'title' => get_the_title(),
-                'permalink' => get_the_permalink()
+                'permalink' => get_the_permalink(),
+                'thumbnail' => get_the_post_thumbnail_url(0, 'medium')
 
             ));
         }
@@ -82,10 +83,17 @@ function universitySearchResults($data)
         }
 
         if (get_post_type() == 'event') {
+            $eventDate = new DateTime(get_field('event_date'));
+
+
             array_push($mainQueryResults['events'], array(
                 'id' => get_the_ID(),
                 'title' => get_the_title(),
-                'permalink' => get_the_permalink()
+                'permalink' => get_the_permalink(),
+                'month' => $eventDate->format('M'),
+                'day' => $eventDate->format('d'),
+                'contentShort' => wp_trim_words(get_the_content(), 8),
+                'excerpt' => wp_trim_words(get_the_excerpt(), 8),
 
             ));
         }
