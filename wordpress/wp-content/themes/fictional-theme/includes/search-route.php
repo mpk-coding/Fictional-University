@@ -1,5 +1,6 @@
 <?php
 
+// register custom API Route
 function universityRegisterSearch()
 {
     register_rest_route('university/v1', '/search', array(
@@ -7,9 +8,9 @@ function universityRegisterSearch()
         'callback' => 'universitySearchResults'
     ), true);
 }
-
 add_action('rest_api_init', "universityRegisterSearch");
 
+// custom API callback
 function universitySearchResults($data)
 {
     // get all data
@@ -20,9 +21,10 @@ function universitySearchResults($data)
             'professor',
             'campus',
             'event',
-            'programs'
+            'program'
         ),
         'posts_per_page' => -1,
+        // search parameter; from the passed parameters, one called 'term'
         's' => sanitize_text_field($data['term'])
     ));
 
@@ -44,7 +46,9 @@ function universitySearchResults($data)
             array_push($mainQueryResults['generalInfo'], array(
                 'id' => get_the_ID(),
                 'title' => get_the_title(),
-                'permalink' => get_the_permalink()
+                'permalink' => get_the_permalink(),
+                'type' => get_post_type(),
+                'author' => get_the_author()
 
             ));
         }

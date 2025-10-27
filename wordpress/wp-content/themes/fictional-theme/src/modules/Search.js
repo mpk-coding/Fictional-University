@@ -122,35 +122,19 @@ class Search {
 		if (!this.input.value) {
 			return;
 		}
-
-		const postsURL =
+		const resultsURL =
 			universityData.root_url +
-			`/wp-json/wp/v2/posts?search=${this.input.value}`;
-		const pagesURL =
-			universityData.root_url +
-			`/wp-json/wp/v2/pages?search=${this.input.value}`;
+			`/wp-json/university/v1/search?term=${this.input.value}`;
 
 		try {
-			// get all at the same time
-			const [postsResponse, pagesResponse] = await Promise.all([
-				fetch(postsURL),
-				fetch(pagesURL),
-			]);
+			const resultsResponse = await fetch(resultsURL);
 
-			// no response
-			if (!postsResponse.ok || !pagesResponse.ok) {
-				throw new Error(`Response status: ${posts.status}`);
+			if (!resultsResponse.ok) {
+				throw new Error(`HTTP error! status: ${resultsResponse.status}`);
 			}
 
-			// json results
-			const [posts, pages] = await Promise.all([
-				postsResponse.json(),
-				pagesResponse.json(),
-			]);
-
-			// Combine results
-			const results = [...posts, ...pages];
-			this.renderSearch(results);
+			const resultsJson = await resultsResponse.json();
+			this.renderSearch(resultsJson);
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -159,19 +143,80 @@ class Search {
 	renderSearch(array) {
 		let render;
 		//
-		if (array.length) {
+		const hasResults = Object.values(array).some((array) => array.length);
+
+		if (hasResults) {
 			render = `
-				<h2 class='search-overlay__section-title'>General Information</h2>
-				<ul class='link-list min-list'>
-				${array
-					.map((element) => {
-						return `
-					<li><a href='${element.link}'>${element.title.rendered}</a> ${
-						element.type == "post" ? `by ${element.authorName}` : ""
-					}</li>`;
-					})
-					.join("")}
-				</ul>`;
+			<div class='row'>
+				<div class='one-third'>
+					<h2 class='search-overlay__section-title'>General Information</h2>
+					<ul class='link-list min-list'>
+					${
+						array.generalInfo.length
+							? array.generalInfo
+									.map((post) => {
+										return `<li>
+								<a href='${post.permalink}'>${post.title}</a>
+								${post.type == "post" ? `<span>by ${post.author}</span>` : ""}
+							</li>`;
+									})
+									.join("")
+							: "<li>No results</li>"
+					}
+					</ul>
+				</div>
+				<div class='one-third'>
+					<h2 class='search-overlay__section-title'>Programs</h2>
+					<ul class='link-list min-list'>
+					${
+						array.programs.length
+							? array.programs
+									.map((post) => {
+										return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
+									})
+									.join("")
+							: `<li>No programs found. <a href='${universityData.root_url}/programs'>See all programs</a></li>`
+					}
+					</ul>
+					<h2 class='search-overlay__section-title'>Professors</h2>
+					<ul class='link-list min-list'>
+					${
+						array.professors.length
+							? array.professors
+									.map((post) => {
+										return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
+									})
+									.join("")
+							: "<li>No results</li>"
+					}
+					</ul>
+				</div>
+				<div class='one-third'>
+					<h2 class='search-overlay__section-title'>Campuses</h2>
+					<ul class='link-list min-list'>
+					${
+						array.campuses.length
+							? array.campuses
+									.map((post) => {
+										return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
+									})
+									.join("")
+							: `<li>No campuses match that search. <a href='${universityData.root_url}/campuses'>See all campuses</a></li>`
+					}
+					</ul>
+					<h2 class='search-overlay__section-title'>Events</h2>
+										<ul class='link-list min-list'>
+					${
+						array.events.length
+							? array.events
+									.map((post) => {
+										return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
+									})
+									.join("")
+							: "<li>No results</li>"
+					}
+					</ul>
+				</div>`;
 		} else {
 			render = `
 				<h2 class='search-overlay__section-title'>No search results for that phrase</h2>`;
