@@ -65,6 +65,19 @@ function universitySearchResults($data)
         }
 
         if (get_post_type() == 'program') {
+            // find related
+            $relatedCampuses = get_field('related_campus');
+
+            // populate campuses array
+            if ($relatedCampuses) {
+                foreach ($relatedCampuses as $campus) {
+                    array_push($mainQueryResults['campuses'], array(
+                        'title' => get_the_title($campus),
+                        'permalink' => get_the_permalink($campus)
+                    ));
+                }
+            }
+
             array_push($mainQueryResults['programs'], array(
                 'id' => get_the_ID(),
                 'title' => get_the_title(),
@@ -105,16 +118,19 @@ function universitySearchResults($data)
             'relation' => 'OR',
         );
         // populate array
-        foreach ($mainQueryResults['programs'] as $program) {
+        foreach ($mainQueryResults['programs'] as $item) {
             array_push($programRelationshipMeta, array(
                 'key' => 'related_programs',
                 'compare' => 'LIKE',
-                'value' => '"' . $program['id'] . '"'
+                'value' => '"' . $item['id'] . '"'
             ));
         }
         //  query for relationship with professor type
         $programRelationShipQuery = new WP_Query(array(
-            'post_type' => 'professor',
+            'post_type' => array(
+                'professor',
+                'event',
+            ),
             // flexible meta query for an x number of programs
             'meta_query' => $programRelationshipMeta
         ));
@@ -122,6 +138,7 @@ function universitySearchResults($data)
         while ($programRelationShipQuery->have_posts()) {
             $programRelationShipQuery->the_post();
 
+            // professor post type relationship
             if (get_post_type() == 'professor') {
                 array_push($mainQueryResults['professors'], array(
                     'id' => get_the_ID(),
@@ -131,6 +148,24 @@ function universitySearchResults($data)
 
                 ));
             }
+
+            // event post type relationship
+            if (get_post_type() == 'event') {
+                $eventDate = new DateTime(get_field('event_date'));
+
+                array_push($mainQueryResults['events'], array(
+                    'id' => get_the_ID(),
+                    'title' => get_the_title(),
+                    'permalink' => get_the_permalink(),
+                    'month' => $eventDate->format('M'),
+                    'day' => $eventDate->format('d'),
+                    'contentShort' => wp_trim_words(get_the_content(), 8),
+                    'excerpt' => wp_trim_words(get_the_excerpt(), 8),
+
+                ));
+            }
+
+            //campus post type relationship
         }
     }
 
@@ -138,6 +173,8 @@ function universitySearchResults($data)
     // array_values removes added keys to the result
     // array unique removes duplicates from the array
     $mainQueryResults['professors'] = array_values(array_unique($mainQueryResults['professors'], SORT_REGULAR));
+    $mainQueryResults['events'] = array_values(array_unique($mainQueryResults['events'], SORT_REGULAR));
+
 
     return $mainQueryResults;
 }
