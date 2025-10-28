@@ -99,28 +99,38 @@ function universitySearchResults($data)
         }
     }
 
-    $programRelationShipQuery = new WP_Query(array(
-        'post_type' => 'professor',
-        'meta_query' => array(
-            array(
+    if ($mainQueryResults['programs']) {
+        // init
+        $programRelationshipMeta = array(
+            'relation' => 'OR',
+        );
+        // populate array
+        foreach ($mainQueryResults['programs'] as $program) {
+            array_push($programRelationshipMeta, array(
                 'key' => 'related_programs',
                 'compare' => 'LIKE',
-                'value' => "94"
-            )
-        )
-    ));
-
-    while ($programRelationShipQuery->have_posts()) {
-        $programRelationShipQuery->the_post();
-
-        if (get_post_type() == 'professor') {
-            array_push($mainQueryResults['professors'], array(
-                'id' => get_the_ID(),
-                'title' => get_the_title(),
-                'permalink' => get_the_permalink(),
-                'thumbnail' => get_the_post_thumbnail_url(0, 'medium')
-
+                'value' => '"' . $program['id'] . '"'
             ));
+        }
+        //  query for relationship with professor type
+        $programRelationShipQuery = new WP_Query(array(
+            'post_type' => 'professor',
+            // flexible meta query for an x number of programs
+            'meta_query' => $programRelationshipMeta
+        ));
+
+        while ($programRelationShipQuery->have_posts()) {
+            $programRelationShipQuery->the_post();
+
+            if (get_post_type() == 'professor') {
+                array_push($mainQueryResults['professors'], array(
+                    'id' => get_the_ID(),
+                    'title' => get_the_title(),
+                    'permalink' => get_the_permalink(),
+                    'thumbnail' => get_the_post_thumbnail_url(0, 'medium')
+
+                ));
+            }
         }
     }
 
