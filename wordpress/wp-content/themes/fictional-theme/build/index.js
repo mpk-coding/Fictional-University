@@ -4218,42 +4218,96 @@ class Search {
     if (!this.input.value) {
       return;
     }
-    const postsURL = universityData.root_url + `/wp-json/wp/v2/posts?search=${this.input.value}`;
-    const pagesURL = universityData.root_url + `/wp-json/wp/v2/pages?search=${this.input.value}`;
+    const resultsURL = universityData.root_url + `/wp-json/university/v1/search?term=${this.input.value}`;
     try {
-      // get all at the same time
-      const [postsResponse, pagesResponse] = await Promise.all([fetch(postsURL), fetch(pagesURL)]);
-
-      // no response
-      if (!postsResponse.ok || !pagesResponse.ok) {
-        throw new Error(`Response status: ${posts.status}`);
+      const resultsResponse = await fetch(resultsURL);
+      if (!resultsResponse.ok) {
+        throw new Error(`HTTP error! status: ${resultsResponse.status}`);
       }
-
-      // json results
-      const [posts, pages] = await Promise.all([postsResponse.json(), pagesResponse.json()]);
-
-      // Combine results
-      const results = [...posts, ...pages];
-      this.renderSearch(results);
+      const resultsJson = await resultsResponse.json();
+      this.renderSearch(resultsJson);
     } catch (error) {
       console.error(error.message);
     }
   }
+  trimWords(str, numWords, suffix = "...") {
+    if (!str) return "";
+    // strip HTML tags and comments
+    const clean = str.replace(/<!--[\s\S]*?-->/g, "").replace(/<[^>]*>/g, "");
+    const words = clean.split(/\s+/);
+    if (words.length <= numWords) return clean;
+    return words.slice(0, numWords).join(" ") + suffix;
+  }
   renderSearch(array) {
     let render;
     //
-    if (array.length) {
+    console.log(array);
+    const hasResults = Object.values(array).some(array => array.length);
+    if (hasResults) {
       render = `
-				<h2 class='search-overlay__section-title'>General Information</h2>
-				<ul class='link-list min-list'>
-				${array.map(element => {
+			<div class='row'>
+				<div class='one-third'>
+					<h2 class='search-overlay__section-title'>General Information</h2>
+					<ul class='link-list min-list'>
+					${array.generalInfo.length ? array.generalInfo.map(post => {
+        return `<li>
+								<a href='${post.permalink}'>${post.title}</a>
+								${post.type == "post" ? `<span>by ${post.author}</span>` : ""}
+							</li>`;
+      }).join("") : "<li>No results</li>"}
+					</ul>
+				</div>
+				<div class='one-third'>
+					<h2 class='search-overlay__section-title'>Programs</h2>
+					<ul class='link-list min-list'>
+					${array.programs.length ? array.programs.map(post => {
+        return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
+      }).join("") : `<li>No programs found. <a href='${universityData.root_url}/programs'>See all programs</a></li>`}
+					</ul>
+					<h2 class='search-overlay__section-title'>Professors</h2>
+					<ul class='professor-cards'>
+					${array.professors.length ? array.professors.map(post => {
+        return `<li class='professor-card__list-item'>
+													<a class='professor-card' href='${post.permalink}'>
+														<img class='professor-card__image' src='${post.thumbnail}'>
+														<span class='professor-card__name'>${post.title}</span>
+													</a>
+												</li>`;
+      }).join("") : "<li>No professors found.</li>"}
+					</ul>
+				</div>
+				<div class='one-third'>
+					<h2 class='search-overlay__section-title'>Campuses</h2>
+					<ul class='link-list min-list'>
+					${array.campuses.length ? array.campuses.map(post => {
+        return `<li><a href='${post.permalink}'>${post.title}</a></li>`;
+      }).join("") : `<li>No campuses match that search. <a href='${universityData.root_url}/campuses'>See all campuses</a></li>`}
+					</ul>
+					<h2 class='search-overlay__section-title'>Events</h2>
+					${array.events.length ? array.events.map(post => {
+        console.log(`post content_short:${post.content_short}`);
+        console.log(`post excerpt:${post.excerpt}`);
         return `
-					<li><a href='${element.link}'>${element.title.rendered}</a> ${element.type == "post" ? `by ${element.authorName}` : ""}</li>`;
-      }).join("")}
-				</ul>`;
+										<div class="event-summary">
+											<a class="event-summary__date t-center" href="<?php the_permalink(); ?>">
+												<span class="event-summary__month">
+													${post.month}
+												</span>
+												<span class="event-summary__day">
+													${post.day}
+												</span>
+											</a>
+											<div class="event-summary__content">
+												<h5 class="event-summary__title headline headline--tiny"><a href="${post.permalink}">${post.title}</a></h5>
+												<p>${post.excerpt ? `${post.excerpt}` : `${post.contentShort}`}
+													<a href='${post.permalink}'>Learn More</a>
+													</p>
+											</div>
+										</div>`;
+      }).join("") : "<li>No results</li>"}
+				</div>`;
     } else {
-      render = `
-				<h2 class='search-overlay__section-title'>No search results for that phrase</h2>`;
+      render = "No results for that phrase.";
     }
     this.results.innerHTML = render;
     this.isSpinner = false;

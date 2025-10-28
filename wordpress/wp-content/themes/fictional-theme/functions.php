@@ -43,6 +43,7 @@ function pageBanner($args = [])
 <?php
 }
 
+// add fields to v2 REST API
 function universityCustomRest()
 {
   // add a custom property to the returned object in rest
@@ -58,7 +59,6 @@ function universityCustomRest()
     }
   ));
 }
-
 add_action('rest_api_init', 'universityCustomRest');
 
 function university_files()
@@ -76,9 +76,7 @@ function university_files()
     'root_url' => get_site_url()
   ));
 }
-
 add_action('wp_enqueue_scripts', 'university_files');
-
 
 //  adding google maps api key
 function universityMapKey($api)
@@ -86,7 +84,6 @@ function universityMapKey($api)
   $api['key'] = GOOGLE_MAPS_API_KEY;
   return $api;
 }
-
 add_filter('acf/fields/google_map/api', 'universityMapKey');
 
 function university_features()
@@ -106,7 +103,9 @@ function university_features()
   // custom image sizes
   add_image_size('pageBanner', 1500, 350, true);
 }
+add_action('after_setup_theme', 'university_features');
 
+//  modify queries for archives
 function adjust_queries($query)
 {
   if (!is_admin() and is_post_type_archive('program') and $query->is_main_query()) {
@@ -133,7 +132,4 @@ function adjust_queries($query)
     $query->set('posts_per_page', -1);
   }
 }
-
-add_action('after_setup_theme', 'university_features');
-
 add_action('pre_get_posts', 'adjust_queries');

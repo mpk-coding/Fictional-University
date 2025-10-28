@@ -1259,6 +1259,9 @@ body.admin-bar .search-overlay {
 .professor-card__image {
   display: block;
   transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  aspect-ratio: 4/3;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .professor-card:hover .professor-card__image {
   opacity: 0.8;
