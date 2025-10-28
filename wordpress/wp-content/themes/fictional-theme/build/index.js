@@ -4241,6 +4241,7 @@ class Search {
   renderSearch(array) {
     let render;
     //
+    console.log(array);
     const hasResults = Object.values(array).some(array => array.length);
     if (hasResults) {
       render = `

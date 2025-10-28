@@ -34,7 +34,7 @@ function universitySearchResults($data)
         'professors' => array(),
         'programs' => array(),
         'events' => array(),
-        'campuses' => array()
+        'campuses' => array(),
     );
 
     // loop through data
@@ -98,6 +98,36 @@ function universitySearchResults($data)
             ));
         }
     }
+
+    $programRelationShipQuery = new WP_Query(array(
+        'post_type' => 'professor',
+        'meta_query' => array(
+            array(
+                'key' => 'related_programs',
+                'compare' => 'LIKE',
+                'value' => "94"
+            )
+        )
+    ));
+
+    while ($programRelationShipQuery->have_posts()) {
+        $programRelationShipQuery->the_post();
+
+        if (get_post_type() == 'professor') {
+            array_push($mainQueryResults['professors'], array(
+                'id' => get_the_ID(),
+                'title' => get_the_title(),
+                'permalink' => get_the_permalink(),
+                'thumbnail' => get_the_post_thumbnail_url(0, 'medium')
+
+            ));
+        }
+    }
+
+    // remove any and all duplicates
+    // array_values removes added keys to the result
+    // array unique removes duplicates from the array
+    $mainQueryResults['professors'] = array_values(array_unique($mainQueryResults['professors'], SORT_REGULAR));
 
     return $mainQueryResults;
 }
