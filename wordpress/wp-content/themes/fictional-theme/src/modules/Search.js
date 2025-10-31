@@ -57,6 +57,8 @@ class Search {
 			},
 			{ once: true }
 		);
+
+		event.preventDefault();
 	}
 
 	closeOverlay() {

@@ -4161,6 +4161,7 @@ class Search {
     }, {
       once: true
     });
+    event.preventDefault();
   }
   closeOverlay() {
     this.overlay.classList.remove("search-overlay--active");
