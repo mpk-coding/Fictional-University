@@ -52,12 +52,11 @@ while (have_posts()) {
         <li><a href="#">Our Goals</a></li> -->
         </ul>
       </div>
-
-      <div class="generic-content">
-        <?php the_content(); ?>
-      </div>
+    <?php } ?>
+    <div class="generic-content">
+      <?php the_content(); ?>
+    </div>
   </div>
-<?php } ?>
 <?php }
 
 get_footer();
