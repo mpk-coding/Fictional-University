@@ -131,5 +131,9 @@ function adjust_queries($query)
   if (!is_admin() and is_post_type_archive('campus') and $query->is_main_query()) {
     $query->set('posts_per_page', -1);
   }
+
+  if ($query->is_search() && $query->is_main_query()) {
+    $query->set('posts_per_page', 10);
+  }
 }
 add_action('pre_get_posts', 'adjust_queries');

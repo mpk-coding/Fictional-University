@@ -95,7 +95,7 @@ while (have_posts()) {
             $today = date('Ymd');
             while ($relatedEvents->have_posts()) {
                 $relatedEvents->the_post();
-                get_template_part('template-parts/event');
+                get_template_part('template-parts/content', 'event');
             }
         } else { ?>
             <hr class="section-break">
