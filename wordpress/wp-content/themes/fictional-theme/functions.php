@@ -136,4 +136,30 @@ function adjust_queries($query)
     $query->set('posts_per_page', 10);
   }
 }
+
 add_action('pre_get_posts', 'adjust_queries');
+
+// redirect subscriber out of admin panel and onto the homepage
+
+add_action('admin_init', 'redirect_subs');
+
+function redirect_subs()
+{
+  $currentUser = wp_get_current_user();
+
+  if (count($currentUser->roles) == 1 && $currentUser->roles[0] == 'subscriber') {
+    wp_redirect(site_url('/'));
+    exit;
+  }
+}
+
+add_action('wp_loaded', 'no_subs_admin_bar');
+
+function no_subs_admin_bar()
+{
+  $currentUser = wp_get_current_user();
+
+  if (count($currentUser->roles) == 1 && $currentUser->roles[0] == 'subscriber') {
+    show_admin_bar(false);
+  }
+}
