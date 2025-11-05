@@ -69,7 +69,6 @@ function university_files()
   wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
   wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
   wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));
-  wp_enqueue_style('university_extra_styles_2', get_theme_file_uri('/style.css'));
 
   // so as to enable relative url in js
   wp_localize_script('main-university-js', 'universityData', array(
@@ -136,4 +135,55 @@ function adjust_queries($query)
     $query->set('posts_per_page', 10);
   }
 }
+
 add_action('pre_get_posts', 'adjust_queries');
+
+// redirect subscriber out of admin panel and onto the homepage
+
+add_action('admin_init', 'redirect_subs');
+
+function redirect_subs()
+{
+  $currentUser = wp_get_current_user();
+
+  if (count($currentUser->roles) == 1 && $currentUser->roles[0] == 'subscriber') {
+    wp_redirect(site_url('/'));
+    exit;
+  }
+}
+
+add_action('wp_loaded', 'no_subs_admin_bar');
+
+function no_subs_admin_bar()
+{
+  $currentUser = wp_get_current_user();
+  if (count($currentUser->roles) == 1 && $currentUser->roles[0] == 'subscriber') {
+    show_admin_bar(false);
+  }
+}
+
+// Customize login screen
+add_filter('login_headerurl', 'login_header_url');
+
+function login_header_url()
+{
+  return esc_url(site_url('/'));
+}
+
+
+// custom login css
+add_action('login_enqueue_scripts', 'login_css');
+add_filter('login_headertitle', 'login_title');
+
+function login_title()
+{
+  return  get_bloginfo();
+}
+
+function login_css()
+{
+  wp_enqueue_style('custom-google-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
+  wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+  wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
+  wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));
+}

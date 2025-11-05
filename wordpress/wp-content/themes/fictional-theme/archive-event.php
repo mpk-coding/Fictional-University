@@ -12,7 +12,7 @@ pageBanner(array(
     while (have_posts()) {
         //  setup global data for post
         the_post();
-        get_template_part('template-parts/event');
+        get_template_part('template-parts/content', 'event');
     }
     //  add pagination
     echo paginate_links();
