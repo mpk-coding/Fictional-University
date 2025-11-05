@@ -6,6 +6,9 @@ function post_types()
     // wp fn
     // post type name, array of props
     register_post_type('event', array(
+        // user permision / members plugin integration
+        'capability_type' => 'event',
+        'map_meta_cap' => true,
         'supports' => array('title', 'editor', 'excerpt'),
         'rewrite' => array(
             'slug' => 'events'
@@ -61,6 +64,8 @@ function post_types()
 
     //
     register_post_type('campus', array(
+        'capability_type' => 'campus',
+        'map_meta_cap' => true,
         'supports' => array('title', 'editor', 'excerpt'),
         'rewrite' => array(
             'slug' => 'campuses'
