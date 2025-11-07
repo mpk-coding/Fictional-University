@@ -90,6 +90,7 @@ function university_features()
   // add menus to wp
   register_nav_menus(array(
     'header' => __('Header Menu', 'fictional-theme'),
+    'header_logged_in' => _('Header logged in Menu', 'fictional-theme'),
     'footer' => __('Footer Menu', 'fictional-theme'),
     'footer-secondary' => __('Footer Menu Secondary', 'fictional-theme'),
     'footer-tertiary' => __('Footer Menu Tertiary', 'fictional-theme')
