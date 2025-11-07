@@ -3932,6 +3932,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/HeroSlider */ "./src/modules/HeroSlider.js");
 /* harmony import */ var _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/GoogleMap */ "./src/modules/GoogleMap.js");
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
+/* harmony import */ var _modules_myNotes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/myNotes */ "./src/modules/myNotes.js");
 
 
 // Our modules / classes
@@ -3940,11 +3941,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// Instantiate a new object using our modules/classes
-var mobileMenu = new _modules_MobileMenu__WEBPACK_IMPORTED_MODULE_1__["default"]();
-var heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default"]();
-const googleMap = new _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__["default"]();
-const search = new _modules_Search__WEBPACK_IMPORTED_MODULE_4__["default"]();
+window.addEventListener("DOMContentLoaded", event => {
+  // Instantiate a new object using our modules/classes
+  var mobileMenu = new _modules_MobileMenu__WEBPACK_IMPORTED_MODULE_1__["default"]();
+  var heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default"]();
+  const googleMap = new _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__["default"]();
+  const search = new _modules_Search__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  const notes = new _modules_myNotes__WEBPACK_IMPORTED_MODULE_5__["default"]();
+});
 
 /***/ }),
 
@@ -4329,6 +4333,37 @@ class Search {
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Search);
+
+/***/ }),
+
+/***/ "./src/modules/myNotes.js":
+/*!********************************!*\
+  !*** ./src/modules/myNotes.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+class Note {
+  constructor() {
+    console.log("myNotes imported");
+    this.deleteButtons = document.querySelectorAll(".delete-note");
+    this.events();
+  }
+  events() {
+    this.deleteButtons.forEach(button => {
+      button.addEventListener("click", this.deleteNote);
+    });
+  }
+
+  // Methods
+  deleteNote() {
+    console.log("deleteNote call");
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Note);
 
 /***/ })
 
