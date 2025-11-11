@@ -19,7 +19,7 @@ if (is_user_logged_in()) {
                 while ($userNotes->have_posts()) {
                     $userNotes->the_post();
                 ?>
-                    <li data-id="<?php the_ID() ?>">
+                    <li data-id="<?php the_ID() ?>" state='readonly'>
                         <input readonly class='note-title-field' type="text" value="<?php echo esc_attr(get_the_title()) ?>">
                         <span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"> Edit</i></span>
                         <span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"> Delete</i></span>
