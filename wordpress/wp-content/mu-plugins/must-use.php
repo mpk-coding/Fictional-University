@@ -84,9 +84,11 @@ function post_types()
 
     //
     register_post_type('note', array(
-        'supports' => array('title', 'editor'),
+        'capability_type' => 'note',
+        'map_meta_cap' => true,
+        'supports' => array('title', 'editor', 'author'),
         'has_archive' => false,
-        'public' => false,
+        'public' => true,
         // shows in admin dashboard
         'show_ui' => true,
         'menu_icon' => 'dashicons-welcome-write-blog',

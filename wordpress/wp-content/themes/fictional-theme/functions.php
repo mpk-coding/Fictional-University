@@ -59,6 +59,12 @@ function universityCustomRest()
       return get_the_author();
     }
   ));
+
+  register_rest_field('note', 'userNoteCount', array(
+    'get_callback' => function () {
+      return count_user_posts(get_current_user_id(), 'note');
+    }
+  ));
 }
 add_action('rest_api_init', 'universityCustomRest');
 
@@ -184,3 +190,27 @@ function login_css()
   wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
   wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));
 }
+
+// force note posts private
+// strip user generated content
+function makeNotePrivate($data, $postarr)
+{
+  if ($data['post_type'] == 'note') {
+
+    // limit user posts available
+    if (count_user_posts(get_current_user_id(), 'note') > 4 && !$postarr['ID']) {
+      http_response_code(403); // set HTTP 403 Forbidden
+      die("You have reached your note limit");
+    }
+
+    $data['post_title'] = sanitize_text_field($data['post_title']);
+    $data['post_content'] = sanitize_textarea_field($data['post_content']);
+  }
+
+  if ($data['post_type'] == 'note' && $data['post_status'] != 'trash') {
+    $data['post_status'] = 'private';
+  }
+  return $data;
+}
+
+add_filter('wp_insert_post_data', 'makeNotePrivate', 10, 2);

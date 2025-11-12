@@ -47,6 +47,11 @@ class Note {
 				throw new Error(`HTTP ${res.status}`);
 			} else {
 				const data = await res.json();
+				if (data.userNoteCount) {
+					document
+						.querySelector(".note-limit-message")
+						.classList.remove("active");
+				}
 				location.reload(true);
 			}
 		} catch (err) {
@@ -83,7 +88,6 @@ class Note {
 				editable,
 				saveButton
 			);
-
 			this.getNote(event);
 		}
 	}
@@ -136,17 +140,40 @@ class Note {
 				status: "publish",
 			}),
 		})
-			.then((response) => response.json())
+			.then(async (response) => {
+				// Read response as text first
+				const text = await response.text();
+
+				// If the response is JSON, parse it
+				let data;
+				try {
+					data = JSON.parse(text);
+				} catch {
+					data = text; // fallback: raw text (e.g., die() output)
+				}
+
+				if (!response.ok) {
+					// For HTTP errors or plain text errors from die()
+					throw new Error(typeof data === "string" ? data : data.message);
+				}
+
+				return data;
+			})
 			.then((data) => {
 				console.log("✅ Note created:", data);
 				window.location.reload(true);
 			})
 			.catch((error) => {
+				if (
+					error.message &&
+					error.message.includes("You have reached your note limit")
+				) {
+					document.querySelector(".note-limit-message").classList.add("active");
+				}
+
 				console.error("❌ Error creating note:", error);
 			});
 	}
-
-	addNote() {}
 
 	makeNoteEditable(editButtonText, parentContainer, editable, saveButton) {
 		parentContainer.setAttribute("state", "editable");
@@ -188,7 +215,13 @@ class Note {
 			.querySelector(".note-body-field");
 		try {
 			const res = await fetch(
-				`${universityData.root_url}/wp-json/wp/v2/note/${noteID}`
+				`${universityData.root_url}/wp-json/wp/v2/note/${noteID}`,
+				{
+					credentials: "include", // send cookies for logged-in session
+					headers: {
+						"X-WP-Nonce": universityData.nonce,
+					},
+				}
 			);
 
 			if (!res.ok) {
