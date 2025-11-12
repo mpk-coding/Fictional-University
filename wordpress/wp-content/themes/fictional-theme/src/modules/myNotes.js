@@ -3,6 +3,7 @@ class Note {
 		this.deleteButtons = document.querySelectorAll(".delete-note");
 		this.editButtons = document.querySelectorAll(".edit-note");
 		this.saveButtons = document.querySelectorAll(".update-note");
+		this.createButton = document.querySelector(".submit-note");
 
 		this.events();
 	}
@@ -22,6 +23,9 @@ class Note {
 		this.saveButtons.forEach((button) => {
 			button.addEventListener("click", this.saveNote.bind(this));
 		});
+
+		// create handlers
+		this.createButton.addEventListener("click", this.createNote.bind(this));
 	}
 
 	// Methods
@@ -114,6 +118,35 @@ class Note {
 				console.error("❌ Error updating note:", err);
 			});
 	}
+
+	async createNote(event) {
+		const parentContainer = event.target.closest(".create-note");
+		const title = parentContainer.querySelector(".new-note-title").value;
+		const content = parentContainer.querySelector(".new-note-body").value;
+
+		fetch(`${universityData.root_url}/wp-json/wp/v2/note`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-WP-Nonce": universityData.nonce,
+			},
+			body: JSON.stringify({
+				title: title,
+				content: content,
+				status: "publish",
+			}),
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("✅ Note created:", data);
+				window.location.reload(true);
+			})
+			.catch((error) => {
+				console.error("❌ Error creating note:", error);
+			});
+	}
+
+	addNote() {}
 
 	makeNoteEditable(editButtonText, parentContainer, editable, saveButton) {
 		parentContainer.setAttribute("state", "editable");

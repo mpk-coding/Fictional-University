@@ -8,6 +8,12 @@ if (is_user_logged_in()) {
         pageBanner(); ?>
 
         <div class="container container--narrow page-section">
+            <div class="create-note">
+                <h2 class='headline headline--medium'>Create note</h2>
+                <input class='new-note-title' type="text" placeholder='Title'>
+                <textarea class='new-note-body' name="" id="" placeholder='Your note here'></textarea>
+                <span class="submit-note">Create note</span>
+            </div>
             <ul class="min-list link-list" id="my-notes">
                 <?php
                 $userNotes = new WP_Query(array(
