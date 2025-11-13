@@ -81,6 +81,25 @@ function post_types()
             'singular_name' => 'Campus',
         )
     ));
+
+    //
+    register_post_type('note', array(
+        'capability_type' => 'note',
+        'map_meta_cap' => true,
+        'supports' => array('title', 'editor', 'author'),
+        'has_archive' => false,
+        'public' => true,
+        // shows in admin dashboard
+        'show_ui' => true,
+        'menu_icon' => 'dashicons-welcome-write-blog',
+        'show_in_rest' => true, //  enable block editor
+        'labels' => array(
+            'name' => "Note",
+            'add_new_item' => 'Add New Note',
+            'all_items' => 'All Notes',
+            'singular_name' => 'Note',
+        )
+    ));
 }
 
 add_action('init', 'post_types');
