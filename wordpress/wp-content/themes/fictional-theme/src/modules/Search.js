@@ -173,7 +173,7 @@ class Search {
 							</li>`;
 									})
 									.join("")
-							: "<li>No results</li>"
+							: "<li>No general information found.</li>"
 					}
 					</ul>
 				</div>
@@ -250,7 +250,7 @@ class Search {
 										</div>`;
 									})
 									.join("")
-							: "<li>No results</li>"
+							: "<ul class='min-list link-list'><li>No events found.</li></ul>"
 					}
 				</div>`;
 		} else {

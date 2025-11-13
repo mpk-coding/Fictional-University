@@ -10,22 +10,30 @@ class Note {
 
 	events() {
 		// deletion handlers
-		this.deleteButtons.forEach((button) => {
-			button.addEventListener("click", this.deleteNote.bind(this));
-		});
+		if (this.deleteButtons) {
+			this.deleteButtons.forEach((button) => {
+				button.addEventListener("click", this.deleteNote.bind(this));
+			});
+		}
 
 		// edit handlers
-		this.editButtons.forEach((button) => {
-			button.addEventListener("click", this.editNote.bind(this));
-		});
+		if (this.editButtons) {
+			this.editButtons.forEach((button) => {
+				button.addEventListener("click", this.editNote.bind(this));
+			});
+		}
 
 		// save handlers
-		this.saveButtons.forEach((button) => {
-			button.addEventListener("click", this.saveNote.bind(this));
-		});
+		if (this.savedButtons) {
+			this.saveButtons.forEach((button) => {
+				button.addEventListener("click", this.saveNote.bind(this));
+			});
+		}
 
 		// create handlers
-		this.createButton.addEventListener("click", this.createNote.bind(this));
+		if (this.createButton) {
+			this.createButton.addEventListener("click", this.createNote.bind(this));
+		}
 	}
 
 	// Methods
