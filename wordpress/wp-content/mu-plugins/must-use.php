@@ -103,7 +103,7 @@ function post_types()
 
     // likes post type
     register_post_type('likes', array(
-        'supports' => array('title'),
+        'supports' => array('title', 'author'),
         'has_archive' => false,
         'public' => false,
         // shows in admin dashboard

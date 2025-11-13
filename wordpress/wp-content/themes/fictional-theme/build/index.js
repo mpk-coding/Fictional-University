@@ -3933,9 +3933,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/GoogleMap */ "./src/modules/GoogleMap.js");
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
 /* harmony import */ var _modules_myNotes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/myNotes */ "./src/modules/myNotes.js");
+/* harmony import */ var _modules_Likes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/Likes */ "./src/modules/Likes.js");
 
 
 // Our modules / classes
+
 
 
 
@@ -3948,6 +3950,7 @@ window.addEventListener("DOMContentLoaded", event => {
   const googleMap = new _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__["default"]();
   const search = new _modules_Search__WEBPACK_IMPORTED_MODULE_4__["default"]();
   const notes = new _modules_myNotes__WEBPACK_IMPORTED_MODULE_5__["default"]();
+  const likes = new _modules_Likes__WEBPACK_IMPORTED_MODULE_6__["default"]();
 });
 
 /***/ }),
@@ -4072,6 +4075,43 @@ class HeroSlider {
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HeroSlider);
+
+/***/ }),
+
+/***/ "./src/modules/Likes.js":
+/*!******************************!*\
+  !*** ./src/modules/Likes.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+class Likes {
+  constructor() {
+    this.likeBox = document.querySelector(".like-box");
+    this.isLiked = this.likeBox.getAttribute("data-exists");
+    this.events();
+  }
+  events() {
+    if (this.likeBox) {
+      this.likeBox.addEventListener("click", event => {});
+    }
+  }
+
+  // methods
+  clickHandler() {
+    if (this.isLiked == "yes") {
+      this.removeLike();
+    } else {
+      this.addLike();
+    }
+  }
+  addLike() {}
+  removeLike() {}
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Likes);
 
 /***/ }),
 

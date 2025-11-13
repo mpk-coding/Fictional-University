@@ -43,7 +43,7 @@ while (have_posts()) {
                     )
                 )
             ));
-            if ($existQuery->postCount > 0) {
+            if ($existQuery->found_posts) {
                 $existStatus = 'yes';
             }
             ?>
