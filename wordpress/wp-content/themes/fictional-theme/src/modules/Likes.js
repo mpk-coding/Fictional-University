@@ -14,16 +14,19 @@ class Likes {
 	}
 
 	// methods
-	clickHandler() {
+	clickHandler(event) {
+		const currentLikeBox = event.target.closest(".like-box");
+
 		if (this.isLiked == "yes") {
-			this.removeLike();
+			this.removeLike(currentLikeBox);
 		} else {
-			this.addLike();
+			this.addLike(currentLikeBox);
 		}
 	}
 
-	async addLike() {
+	async addLike(currentLikeBox) {
 		const url = `${universityData.root_url}/wp-json/university/v1/manageLike`;
+		const professorID = currentLikeBox.getAttribute("data-id");
 		try {
 			const response = await fetch(url, {
 				method: "POST",
@@ -31,6 +34,9 @@ class Likes {
 					"Content-Type": "application/json",
 					"X-WP-Nonce": universityData.nonce,
 				},
+				body: JSON.stringify({
+					professor_id: `${professorID}`,
+				}),
 			});
 			if (!response.ok) {
 				throw new Error(`Response status: ${response.status}`);
@@ -54,6 +60,9 @@ class Likes {
 					"Content-Type": "application/json",
 					"X-WP-Nonce": universityData.nonce,
 				},
+				body: JSON.stringify({
+					professor_id: "789",
+				}),
 			});
 			if (!response.ok) {
 				throw new Error(`Response status: ${response.status}`);
