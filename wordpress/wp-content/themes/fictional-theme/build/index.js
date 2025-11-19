@@ -4091,7 +4091,6 @@ __webpack_require__.r(__webpack_exports__);
 class Likes {
   constructor() {
     this.likeBox = document.querySelector(".like-box");
-    this.isLiked = this.likeBox.getAttribute("data-exists");
     console.log("like js");
     this.events();
   }
@@ -4104,7 +4103,8 @@ class Likes {
   // methods
   clickHandler(event) {
     const currentLikeBox = event.target.closest(".like-box");
-    if (this.isLiked == "yes") {
+    const isLiked = this.likeBox.getAttribute("data-exists");
+    if (isLiked == "yes") {
       this.removeLike(currentLikeBox);
     } else {
       this.addLike(currentLikeBox);
@@ -4129,14 +4129,18 @@ class Likes {
       }
       const result = await response.json();
       // success
-      console.log(result);
+      const likeCountEl = currentLikeBox.querySelector(".like-count");
+      currentLikeBox.setAttribute("data-exists", "yes");
+      likeCountEl.innerHTML = Number(likeCountEl.innerHTML) + 1;
+      currentLikeBox.setAttribute("data-like", `${result}`);
     } catch (error) {
       // error
       console.error(error.message);
     }
   }
-  async removeLike() {
+  async removeLike(currentLikeBox) {
     const url = `${universityData.root_url}/wp-json/university/v1/manageLike`;
+    const likeID = currentLikeBox.getAttribute("data-like");
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -4145,7 +4149,7 @@ class Likes {
           "X-WP-Nonce": universityData.nonce
         },
         body: JSON.stringify({
-          professor_id: "789"
+          like_id: likeID
         })
       });
       if (!response.ok) {
@@ -4153,7 +4157,9 @@ class Likes {
       }
       const result = await response.json();
       // success
-      console.log(result);
+      const likeCountEl = currentLikeBox.querySelector(".like-count");
+      currentLikeBox.setAttribute("data-exists", "no");
+      likeCountEl.innerHTML = Number(likeCountEl.innerHTML) - 1;
     } catch (error) {
       // error
       console.error(error.message);
