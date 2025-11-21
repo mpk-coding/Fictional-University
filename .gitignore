@@ -11,3 +11,5 @@ wordpress/wp-content/uploads
 # Exclude specific plugins and themes from being ignored
 !wordpress/wp-content/
 !wordpress/wp-content/plugins/mu-plugins
+
+wordpress.sql
