@@ -11,7 +11,9 @@
 		"watch": "npm-run-all --parallel js browsersync",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "docker-compose up -d && npm run watch",
-		"stop": "docker-compose down"
+		"stop": "docker-compose down",
+		"prod": "docker-compose -f docker-compose.yml up -d",
+		"stop-prod": "docker-compose -f docker-compose.yml down"
 	},
 	"author": "mpk.coding@gmail.com",
 	"license": "ISC",
