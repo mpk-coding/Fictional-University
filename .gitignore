@@ -5,7 +5,9 @@ db/
 
 # Ignore WordPress core files
 wordpress/*
-wordpress/wp-content/plugins
+wordpress/wp-content/plugins/advanced-custom-fields
+wordpress/wp-content/plugins/akismet
+wordpress/wp-content/plugins/members
 wordpress/wp-content/uploads
 
 # Exclude specific plugins and themes from being ignored
